@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Părinte | KiM</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Bun venit, părinte!</h1>
+        <p>Aici va apărea harta și informațiile copilului.</p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        async function checkSession() {
+            const res = await fetch("api/auth.php");
+            const data = await res.json();
+
+            if (!data.logged_in || data.role !== "parent") {
+                window.location.href = "index.html";
+            }
+        }
+
+        async function logout() {
+            await fetch("api/auth.php", { method: "DELETE" });
+            window.location.href = "index.html";
+        }
+
+        checkSession();
+    </script>
+</body>
+</html>

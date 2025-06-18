@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | KiM</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h1 id="welcomeMsg">Bun venit!</h1>
+        <button id="logoutBtn">Logout</button>
+
+        <div class="children-section">
+            <h2>Adaugă copil nou</h2>
+            <form id="addChildForm">
+                <input type="text" id="childName" placeholder="Nume copil" required>
+                <button type="submit">Adaugă</button>
+                <p id="childMsg" class="error-msg"></p>
+            </form>
+
+            <h2>Copii înregistrați</h2>
+            <ul id="childrenList"></ul>
+        </div>
+    </div>
+
+    <script>
+    async function checkSession() {
+      const res = await fetch("api/auth.php");
+      const data = await res.json();
+
+      if (!data.logged_in || data.role !== 'admin') {
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("welcomeMsg").textContent = `Salut, ${data.username}!`;
+        loadChildren();
+      }
+    }
+
+    async function logout() {
+      await fetch("api/auth.php", { method: "DELETE" });
+      window.location.href = "index.html";
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    // Adaugare copil
+    const childForm = document.getElementById("addChildForm");
+    const childNameInput = document.getElementById("childName");
+    const childMsg = document.getElementById("childMsg");
+
+    childForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = childNameInput.value.trim();
+      if (!name) return;
+
+      const res = await fetch("api/children.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        childMsg.textContent = "Copil adăugat!";
+        childMsg.style.color = "#8EB69B";
+        childNameInput.value = "";
+        loadChildren();
+      } else {
+        childMsg.textContent = data.message || "Eroare.";
+        childMsg.style.color = "#ff5c5c";
+      }
+    });
+
+    // Afișare copii
+    async function loadChildren() {
+      const res = await fetch("api/children.php");
+      const data = await res.json();
+
+      const list = document.getElementById("childrenList");
+      list.innerHTML = "";
+
+      data.forEach(child => {
+        const li = document.createElement("li");
+        li.textContent = child.name;
+        list.appendChild(li);
+      });
+    }
+
+    checkSession();
+    </script>
+</body>
+</html>
