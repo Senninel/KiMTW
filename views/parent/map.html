@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Părinte | KiM</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/Kim/css/style.css">
 </head>
 <body>
     <div class="login-container">
@@ -14,7 +14,7 @@
 
     <script>
         async function checkSession() {
-            const res = await fetch("api/auth.php");
+            const res = await fetch("/Kim/api/users/auth.php");
             const data = await res.json();
 
             if (!data.logged_in || data.role !== "parent") {
@@ -23,8 +23,8 @@
         }
 
         async function logout() {
-            await fetch("api/auth.php", { method: "DELETE" });
-            window.location.href = "index.html";
+            await fetch("/Kim/api/users/auth.php", { method: "DELETE" });
+            window.location.href = "/Kim/";
         }
 
         checkSession();

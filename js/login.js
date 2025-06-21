@@ -18,7 +18,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const errorBox = document.getElementById("error");
 
     try {
-        const response = await fetch("api/auth.php", {
+        const response = await fetch("/Kim/api/users/auth.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -29,9 +29,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         const data = await response.json();
         if (data.success) {
             if (data.role === "admin") {
-                window.location.href = "admin.html";
+               window.location.href = "/Kim/index.php?page=admin";
             } else if (data.role === "parent") {
-                window.location.href = "parent.html";
+               window.location.href = "/Kim/index.php?page=parent";
             } else {
                 errorBox.textContent = "Rol necunoscut.";
             }
@@ -56,7 +56,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const msg = document.getElementById("registerMsg");
 
     try {
-        const response = await fetch("api/register.php", {
+        const response = await fetch("/Kim/api/users/register.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
