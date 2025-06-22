@@ -14,7 +14,9 @@
         <main>
             <nav>
                 <a href="#" id="monitorizareBtn" class="active">Monitorizare</a>
-                <a href="#" id="updateLocationBtn">Update Locație Părinte</a>
+                <a href="#" id="updateLocationBtn">Update Locatie Parinte</a>
+                <a href="#" id="startSimBtn" style="background-color: #28a745;">Porneste Simulare</a>
+                <a href="#" id="stopSimBtn" style="background-color: #dc3545;">Opreste Simulare</a>
                 <a href="#" id="logoutBtn">Deconectare</a>
             </nav>
 
@@ -22,14 +24,14 @@
 
             <div id="monitoringContent">
                 <div class="content-area">
-                    <h2>Localizarea în timp real</h2>
-                    <p>Aici puteți vedea ultima locație cunoscută a copilului.</p>
+                    <h2>Localizarea in timp real</h2>
+                    <p>Aici puteti vedea ultima locatie cunoscuta a copilului.</p>
                     <div id="map"></div>
 
-                    <h2>Adaugă copil nou</h2>
+                    <h2>Adauga copil nou</h2>
                     <form id="addChildForm">
                         <input type="text" id="childName" placeholder="Nume copil" required>
-                        <button type="submit">Adaugă copil</button>
+                        <button type="submit">Adauga copil</button>
                         <p id="childMsg" class="error-msg"></p>
                     </form>
                 </div>
@@ -37,12 +39,12 @@
 
             <div id="updateLocationContent" style="display: none;">
                  <div class="content-area">
-                    <h2>Actualizează locația ta</h2>
-                    <p>Introdu coordonatele pentru a actualiza locația de referință.</p>
+                    <h2>Actualizeaza locatia ta</h2>
+                    <p>Introdu coordonatele pentru a actualiza locatia de referinta.</p>
                     <form id="updateParentLocationForm">
                         <input type="text" id="parentLatitude" placeholder="Latitudine" required>
                         <input type="text" id="parentLongitude" placeholder="Longitudine" required>
-                        <button type="submit">Actualizează</button>
+                        <button type="submit">Actualizeaza</button>
                         <p id="updateMsg" class="error-msg"></p>
                     </form>
                 </div>
@@ -52,6 +54,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/Kim/js/simulation.js"></script> 
     <script src="/Kim/js/map.js"></script>
 </body>
 </html>
