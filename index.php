@@ -17,7 +17,7 @@ if (!isset($_GET['page'])) {
 }
 
 
-// Stabileste ce pagina sa fie afisata. Implicit, va fi 'login'.
+// Stabileste ce pagina sa fie afisata.
 $page = $_GET['page'] ?? 'login';
 
 // Directioneaza cererea catre vizualizarea corecta (fisierul .html corespunzator).

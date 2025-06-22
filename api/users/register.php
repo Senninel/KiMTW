@@ -15,7 +15,7 @@ if (!$username || !$password || !in_array($role, ['admin', 'parent'])) {
     exit;
 }
 
-// verifică dacă există deja
+// verifica dacă exista deja
 $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
 $stmt->execute([$username]);
 if ($stmt->fetch()) {

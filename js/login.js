@@ -1,4 +1,4 @@
-﻿// Schimbă între formulare
+﻿// Schimba intre formulare
 function showRegister() {
     document.getElementById("login-tab").classList.remove("active");
     document.getElementById("register-tab").classList.add("active");
@@ -9,7 +9,7 @@ function showLogin() {
     document.getElementById("login-tab").classList.add("active");
 }
 
-// LOGIN
+// Login
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -46,7 +46,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     }
 });
 
-// REGISTER
+// Register
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 

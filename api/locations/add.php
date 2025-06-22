@@ -1,55 +1,48 @@
 ﻿<?php
-require_once '../../includes/db.php';
-require_once '../../includes/session.php';
 
-header('Content-Type: application/json');
 
-$method = $_SERVER['REQUEST_METHOD'];
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST");
 
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Neautentificat']);
-    exit;
+require_once __DIR__ . '/../../includes/db.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['message' => 'Metoda nepermisa.']);
+    exit();
 }
 
-// ✅ GET: toate locațiile unui copil
-if ($method === 'GET') {
-    $childId = $_GET['child_id'] ?? null;
+$json_data = file_get_contents("php://input");
+$data = json_decode($json_data);
 
-    if (!$childId || !is_numeric($childId)) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'ID copil invalid']);
-        exit;
+if (!$data || !isset($data->child_id) || !isset($data->latitude) || !isset($data->longitude)) {
+    http_response_code(400);
+    echo json_encode(['message' => 'Date incomplete sau format JSON invalid.']);
+    exit();
+}
+
+$child_id = filter_var($data->child_id, FILTER_SANITIZE_NUMBER_INT);
+$latitude = htmlspecialchars($data->latitude);
+$longitude = htmlspecialchars($data->longitude);
+
+try {
+    $query = "INSERT INTO locations (child_id, latitude, longitude) VALUES (:child_id, :latitude, :longitude)";
+
+    $stmt = $pdo->prepare($query);
+
+    $stmt->bindParam(':child_id', $child_id);
+    $stmt->bindParam(':latitude', $latitude);
+    $stmt->bindParam(':longitude', $longitude);
+
+    if ($stmt->execute()) {
+        http_response_code(201);
+        echo json_encode(['message' => 'Locatie adaugata cu succes.']);
+    } else {
+        http_response_code(503);
+        echo json_encode(['message' => 'Eroare interna: Nu s-a putut adauga locatia.']);
     }
-
-    $stmt = $pdo->prepare("SELECT * FROM locations WHERE child_id = ? ORDER BY timestamp DESC");
-    $stmt->execute([$childId]);
-    $locations = $stmt->fetchAll();
-
-    echo json_encode(['success' => true, 'locations' => $locations]);
-    exit;
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['message' => 'Eroare la baza de date: ' . $e->getMessage()]);
 }
-
-// ✅ POST: înregistrează o nouă locație
-if ($method === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $childId = $data['child_id'] ?? null;
-    $lat = $data['latitude'] ?? null;
-    $lon = $data['longitude'] ?? null;
-
-    if (!$childId || !$lat || !$lon) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Date lipsă']);
-        exit;
-    }
-
-    $stmt = $pdo->prepare("INSERT INTO locations (child_id, latitude, longitude) VALUES (?, ?, ?)");
-    $stmt->execute([$childId, $lat, $lon]);
-
-    echo json_encode(['success' => true, 'message' => 'Locație adăugată']);
-    exit;
-}
-
-// ❌ Orice altă metodă
-http_response_code(405);
-echo json_encode(['success' => false, 'message' => 'Metodă neacceptată']);
+?>

@@ -7,44 +7,46 @@
     <link rel="stylesheet" href="/Kim/css/style.css" />
 </head>
 <body>
-    <div class="login-container">
-        <!-- LOGIN -->
-        <div id="login-tab" class="tab active">
-            <h1>KiM Login</h1>
-            <form id="loginForm">
-                <label for="username">Utilizator</label>
-                <input type="text" id="username" placeholder="ex: maria123" required />
+    <div class="login-wrapper">
+        <div class="login-container">
+            <!-- Login -->
+            <div id="login-tab" class="tab active">
+                <h1>KiM Login</h1>
+                <form id="loginForm">
+                    <label for="username">Utilizator</label>
+                    <input type="text" id="username" placeholder="ex: maria123" required />
 
-                <label for="password">Parolă</label>
-                <input type="password" id="password" placeholder="Parolă" required />
+                    <label for="password">Parolă</label>
+                    <input type="password" id="password" placeholder="Parolă" required />
 
-                <button type="submit">Autentificare</button>
-                <p id="error" class="error-msg"></p>
-            </form>
-            <button class="switch-btn" onclick="showRegister()">Creează cont</button>
-        </div>
+                    <button type="submit">Autentificare</button>
+                    <p id="error" class="error-msg"></p>
+                </form>
+                <button class="switch-btn" onclick="showRegister()">Creează cont</button>
+            </div>
 
-        <!-- REGISTER -->
-        <div id="register-tab" class="tab">
-            <h1>Înregistrare</h1>
-            <form id="registerForm">
-                <label for="newUsername">Utilizator nou</label>
-                <input type="text" id="newUsername" placeholder="ex: florin99" required />
+            <!-- Register -->
+            <div id="register-tab" class="tab">
+                <h1>Înregistrare</h1>
+                <form id="registerForm">
+                    <label for="newUsername">Utilizator nou</label>
+                    <input type="text" id="newUsername" placeholder="ex: florin99" required />
 
-                <label for="newPassword">Parolă</label>
-                <input type="password" id="newPassword" placeholder="Parolă" required />
+                    <label for="newPassword">Parolă</label>
+                    <input type="password" id="newPassword" placeholder="Parolă" required />
 
-                <label for="role">Rol</label>
-                <select id="role" required>
-                    <option disabled selected>Alege rol</option>
-                    <option value="admin">Admin</option>
-                    <option value="parent">Părinte</option>
-                </select>
+                    <label for="role">Rol</label>
+                    <select id="role" required>
+                        <option disabled selected>Alege rol</option>
+                        <option value="admin">Admin</option>
+                        <option value="parent">Părinte</option>
+                    </select>
 
-                <button type="submit">Înregistrează</button>
-                <p id="registerMsg" class="error-msg"></p>
-            </form>
-            <button class="switch-btn" onclick="showLogin()">Înapoi la login</button>
+                    <button type="submit">Înregistrează</button>
+                    <p id="registerMsg" class="error-msg"></p>
+                </form>
+                <button class="switch-btn" onclick="showLogin()">Înapoi la login</button>
+            </div>
         </div>
     </div>
 

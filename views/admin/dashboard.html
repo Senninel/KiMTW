@@ -2,93 +2,78 @@
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | KiM</title>
     <link rel="stylesheet" href="/Kim/css/style.css">
 </head>
 <body>
-    <div class="admin-container">
+    <div class="dashboard-container">
         <h1 id="welcomeMsg">Bun venit!</h1>
-        <button id="logoutBtn">Logout</button>
+        
+        <nav>
+            <a href="#" id="addBtn" class="active">Adaugă</a>
+            <a href="#" id="updateBtn">Update</a>
+            <a href="#" id="deleteBtn">Șterge</a>
+            <a href="#" id="exportBtn">Export</a> 
+            <a href="#" id="logoutBtnNav">Logout</a>
+        </nav>
+
+        <div id="addContent">
+            <div class="children-section">
+                <h2>Adaugă copil nou</h2>
+                <form id="addChildForm">
+                    <input type="text" id="childName" placeholder="Nume copil" required>
+                    <input type="number" id="parentId" placeholder="ID părinte" required>
+                    <button type="submit">Adaugă copil</button>
+                    <p id="childMsg" class="message-box"></p>
+                </form>
+            </div>
+        </div>
+
+        <div id="updateContent" style="display: none;">
+            <div class="children-section">
+                <h2>Actualizează datele unui copil</h2>
+                <form id="updateChildForm">
+                    <input type="number" id="updateChildId" placeholder="ID copil de actualizat" required>
+                    <input type="text" id="updateChildName" placeholder="Nume nou (opțional)">
+                    <input type="number" id="updateParentId" placeholder="ID părinte nou (opțional)">
+                    <button type="submit">Actualizează</button>
+                    <p id="updateMsg" class="message-box"></p>
+                </form>
+            </div>
+        </div>
+
+        <div id="deleteContent" style="display: none;">
+            <div class="children-section">
+                <h2>Șterge un copil</h2>
+                <form id="deleteChildForm">
+                    <input type="number" id="deleteChildId" placeholder="ID copil de șters" required>
+                    <button type="submit">Șterge</button>
+                    <p id="deleteMsg" class="message-box"></p>
+                </form>
+            </div>
+        </div>
+
+        <div id="exportContent" style="display: none;">
+            <div class="children-section">
+                <h2>Exportă date copii</h2>
+                <form id="exportForm">
+                    <label for="exportFormat" style="margin-bottom: 0.5rem;">Alege formatul de export:</label>
+                    <select id="exportFormat">
+                        <option value="json">JSON</option>
+                        <option value="csv">CSV</option>
+                    </select>
+                    <button type="submit">Descarcă Date</button>
+                    <p id="exportMsg" class="message-box"></p>
+                </form>
+            </div>
+        </div>
 
         <div class="children-section">
-            <h2>Adaugă copil nou</h2>
-            <form id="addChildForm">
-                <input type="text" id="childName" placeholder="Nume copil" required>
-                <button type="submit">Adaugă</button>
-                <p id="childMsg" class="error-msg"></p>
-            </form>
-
             <h2>Copii înregistrați</h2>
             <ul id="childrenList"></ul>
         </div>
     </div>
 
-    <script>
-    async function checkSession() {
-      const res = await fetch("/Kim/api/users/auth.php");
-      const data = await res.json();
-
-      if (!data.logged_in || data.role !== 'admin') {
-        window.location.href = "index.html";
-      } else {
-        document.getElementById("welcomeMsg").textContent = `Salut, ${data.username}!`;
-        loadChildren();
-      }
-    }
-
-    async function logout() {
-      await fetch("/Kim/api/users/auth.php", { method: "DELETE" });
-      window.location.href = "index.html";
-    }
-
-    document.getElementById("logoutBtn").addEventListener("click", logout);
-
-    // Adaugare copil
-    const childForm = document.getElementById("addChildForm");
-    const childNameInput = document.getElementById("childName");
-    const childMsg = document.getElementById("childMsg");
-
-    childForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name = childNameInput.value.trim();
-      if (!name) return;
-
-      const res = await fetch("/Kim/api/children/index.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        childMsg.textContent = "Copil adăugat!";
-        childMsg.style.color = "#8EB69B";
-        childNameInput.value = "";
-        loadChildren();
-      } else {
-        childMsg.textContent = data.message || "Eroare.";
-        childMsg.style.color = "#ff5c5c";
-      }
-    });
-
-    // Afișare copii
-    async function loadChildren() {
-      const res = await fetch("/Kim/api/children/index.php");
-      const data = await res.json();
-
-      const list = document.getElementById("childrenList");
-      list.innerHTML = "";
-
-      data.forEach(child => {
-        const li = document.createElement("li");
-        li.textContent = child.name;
-        list.appendChild(li);
-      });
-    }
-
-    checkSession();
-    </script>
+    <script src="/Kim/js/admin.js"></script>
 </body>
 </html>

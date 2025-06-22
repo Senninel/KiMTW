@@ -2,32 +2,56 @@
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <title>Părinte | KiM</title>
+    <title>Harta Monitorizare - KiM</title>
     <link rel="stylesheet" href="/Kim/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <div class="login-container">
-        <h1>Bun venit, părinte!</h1>
-        <p>Aici va apărea harta și informațiile copilului.</p>
-        <button onclick="logout()">Logout</button>
+    <div class="dashboard-container">
+        <header>
+            <h1>KiM - Harta Monitorizare</h1>
+        </header>
+        <main>
+            <nav>
+                <a href="#" id="monitorizareBtn" class="active">Monitorizare</a>
+                <a href="#" id="updateLocationBtn">Update Locație Părinte</a>
+                <a href="#" id="logoutBtn">Deconectare</a>
+            </nav>
+
+            <div id="alertContainer"></div>
+
+            <div id="monitoringContent">
+                <div class="content-area">
+                    <h2>Localizarea în timp real</h2>
+                    <p>Aici puteți vedea ultima locație cunoscută a copilului.</p>
+                    <div id="map"></div>
+
+                    <h2>Adaugă copil nou</h2>
+                    <form id="addChildForm">
+                        <input type="text" id="childName" placeholder="Nume copil" required>
+                        <button type="submit">Adaugă copil</button>
+                        <p id="childMsg" class="error-msg"></p>
+                    </form>
+                </div>
+            </div>
+
+            <div id="updateLocationContent" style="display: none;">
+                 <div class="content-area">
+                    <h2>Actualizează locația ta</h2>
+                    <p>Introdu coordonatele pentru a actualiza locația de referință.</p>
+                    <form id="updateParentLocationForm">
+                        <input type="text" id="parentLatitude" placeholder="Latitudine" required>
+                        <input type="text" id="parentLongitude" placeholder="Longitudine" required>
+                        <button type="submit">Actualizează</button>
+                        <p id="updateMsg" class="error-msg"></p>
+                    </form>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <script>
-        async function checkSession() {
-            const res = await fetch("/Kim/api/users/auth.php");
-            const data = await res.json();
-
-            if (!data.logged_in || data.role !== "parent") {
-                window.location.href = "index.html";
-            }
-        }
-
-        async function logout() {
-            await fetch("/Kim/api/users/auth.php", { method: "DELETE" });
-            window.location.href = "/Kim/";
-        }
-
-        checkSession();
-    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/Kim/js/map.js"></script>
 </body>
 </html>

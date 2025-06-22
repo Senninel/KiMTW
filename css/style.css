@@ -12,10 +12,6 @@ body {
     padding: 0;
     font-family: 'Segoe UI', sans-serif;
     background-color: var(--dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     color: var(--bg-light);
 }
 
@@ -28,6 +24,14 @@ body {
     box-shadow: 0 0 20px rgba(8, 88, 70, 0.3);
     text-align: center;
 }
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
 
     .login-container h1 {
         text-align: center;
@@ -166,3 +170,94 @@ button {
     .tab.active {
         display: block;
     }
+
+.dashboard-container {
+    width: 90%;
+    max-width: 1200px; 
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--mid-dark);
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(8, 88, 70, 0.3);
+}
+
+.dashboard-container h1,
+.dashboard-container h2 {
+    text-align: center;
+    color: var(--accent);
+}
+
+
+.dashboard-container nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--mid);
+}
+
+.dashboard-container nav a {
+    color: var(--bg-light);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.dashboard-container nav a:hover,
+.dashboard-container nav a.active {
+    background-color: var(--mid);
+}
+
+
+#map {
+    width: 100%; 
+    height: 70vh;
+    max-height: 700px; 
+    border-radius: 8px;
+}
+
+
+@media (max-width: 768px) {
+    body {
+        display: block;
+        height: auto;
+    }
+
+    .dashboard-container {
+        width: 95%;
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+
+    .dashboard-container nav {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    #map {
+        height: 55vh;
+    }
+}
+.centered {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+#alertContainer {
+    width: 90%;
+    margin: 0 auto 20px auto;
+    padding: 0;
+}
+
+.distance-alert {
+    background-color: #ff5c5c; 
+    color: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

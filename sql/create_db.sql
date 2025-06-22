@@ -33,3 +33,13 @@ CREATE TABLE alerts (
                         triggered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (child_id) REFERENCES children(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE parent_locations (
+  parent_id INT PRIMARY KEY,
+  latitude FLOAT NOT NULL,
+  longitude FLOAT NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (parent_id) REFERENCES users(id)
+);
+
