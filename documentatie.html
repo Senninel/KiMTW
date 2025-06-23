@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ro" prefix="schema: http://schema.org/ sa: http://ns.science.ai/">
+<head>
+  <meta charset="utf-8">
+  <title>Kid Web Monitor</title>
+</head>
+<body>
+
+<article resource="#" typeof="schema:ScholarlyArticle">
+  <header>
+    <h1 property="schema:name">Kid Web Monitor</h1>
+    <p role="doc-subtitle" property="schema:alternateName">
+      Sistem de monitorizare în timp real a copiilor în spațiul urban
+    </p>
+  </header>
+
+  <meta property="schema:accessibilityFeature" content="alternativeText">
+  <meta property="schema:accessibilityHazard" content="noFlashingHazard">
+  <meta property="schema:accessibilityAPI" content="ARIA">
+  <meta property="schema:accessibilityControl" content="fullKeyboardControl">
+
+  <section typeof="sa:Abstract" role="doc-abstract">
+    <h2>Rezumat</h2>
+    <p>
+      Proiectul <strong>Kid Web Monitor</strong> propune un sistem web modern care permite monitorizarea în timp real a copiilor
+      dintr-o familie. Funcționalitățile principale includ urmărirea locației copilului pe hartă, detectarea interacțiunilor apropiate
+      între copii, alerte de distanțare față de puncte de interes și simulări dinamice. Interfața este responsivă, iar aplicația este
+      construită folosind HTML, CSS, JavaScript, AJAX și un backend PHP REST fără framework-uri. Datele sunt stocate într-o bază
+      de date MySQL.
+    </p>
+  </section>
+
+  <section role="contentinfo">
+    <section typeof="sa:AuthorsList">
+      <h2>Autori</h2>
+      <ul>
+        <li typeof="sa:ContributorRole" property="schema:author">
+          <span typeof="schema:Person" resource="#nunu">
+            <meta property="schema:givenName" content="Cristiano">
+            <meta property="schema:familyName" content="Nunu">
+            <span property="schema:name">Nunu Cristiano</span>
+          </span>
+          <a href="#uaic" property="sa:roleAffiliation" resource="http://www.uaic.ro/">1</a>
+          <a href="#note1" property="sa:roleAction" resource="#note1" rel="footnote">A</a>
+        </li>
+        <li typeof="sa:ContributorRole" property="schema:author">
+          <span typeof="schema:Person" resource="#buruiana">
+            <meta property="schema:givenName" content="David Ștefan">
+            <meta property="schema:familyName" content="Buruiana">
+            <span property="schema:name">Buruiana David Ștefan</span>
+          </span>
+          <a href="#uaic" property="sa:roleAffiliation" resource="http://www.uaic.ro/">2</a>
+          <a href="#note2" property="sa:roleAction" resource="#note2" rel="footnote">A</a>
+        </li>
+      </ul>
+    </section>
+
+    <section typeof="sa:Affiliations">
+      <h2>Afilieri</h2>
+      <ul>
+        <li id="uaic">
+          <span typeof="schema:Organization" resource="http://www.uaic.ro/">
+            <span property="schema:name">Universitatea „Alexandru Ioan Cuza” din Iași</span>,
+            <span property="schema:department">Facultatea de Informatică</span>
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Licență</h2>
+      <p>
+        <a rel="license" property="schema:license" typeof="schema:CreativeWork"
+           href="https://opensource.org/licenses/MIT">MIT License</a>
+      </p>
+    </section>
+
+    <section>
+      <h2>Drepturi de autor</h2>
+      <p>
+        <span property="schema:copyrightYear">2025</span>,
+        <span property="schema:copyrightHolder" typeof="schema:Organization">
+          <span property="schema:name">Universitatea „Alexandru Ioan Cuza” din Iași</span>
+        </span>
+      </p>
+    </section>
+
+    <section>
+      <h2>Cuvinte cheie</h2>
+      <ul>
+        <li property="schema:keywords">monitorizare copii</li>
+        <li property="schema:keywords">web semnatic</li>
+        <li property="schema:keywords">hărți interactive</li>
+        <li property="schema:keywords">PHP REST API</li>
+        <li property="schema:keywords">JavaScript</li>
+      </ul>
+    </section>
+  </section>
+
+  <section typeof="sa:Abstract">
+    <h2 role="doc-title">Structura aplicației</h2>
+    <p>
+      Proiectul conține următoarele pagini: login, înregistrare, dashboard (monitorizare), și simulare. Sistemul permite
+      autentificarea părinților, urmărirea în timp real a poziției copiilor și alertarea automată în caz de deviere față
+      de punctele de interes sau interacțiuni riscante între copii. Toate componentele sunt create fără framework-uri, cu
+      o abordare modulară în foldere (e.g., `api/children`, `api/users`).
+    </p>
+  </section>
+
+
+  <section id="funding" typeof="sa:Funding">
+    <h2 role="doc-title">Finanțare</h2>
+    <p>Acest proiect nu a beneficiat de finanțare externă.</p>
+  </section>
+
+  <section typeof="sa:Disclosures">
+    <h2>Declarații de interese</h2>
+    <p>Autorii nu declară interese conflictuale.</p>
+  </section>
+
+  <section typeof="sa:Acknowledgements">
+    <h2>Mulțumiri</h2>
+    <p>
+      Mulțumim profesorilor coordonatori pentru ghidare și colegilor pentru feedback.
+      De asemenea, mulțumim resurselor online care au facilitat înțelegerea standardelor web moderne.
+    </p>
+  </section>
+
+  <section>
+    <h2>Referințe</h2>
+    <ol>
+      <li typeof="schema:WebPage" role="doc-biblioentry"
+          resource="https://developer.mozilla.org/en-US/docs/Web" 
+          property="schema:citation" id="mdn">
+        <cite property="schema:name">
+          <a href="https://developer.mozilla.org/en-US/docs/Web">MDN Web Docs</a>
+        </cite>,
+        by <span property="schema:author" typeof="schema:Organization">
+          Mozilla Foundation
+        </span>; accessed on
+        <time property="schema:endTime" datetime="2025-06-22">22 Iunie 2025</time>.
+      </li>
+    </ol>
+  </section>
+</article>
+
+</body>
+</html>
