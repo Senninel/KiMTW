@@ -39,12 +39,8 @@
                     <label for="newPassword">Parolă</label>
                     <input type="password" id="newPassword" placeholder="Parolă" required />
 
-                    <label for="role">Rol</label>
-                    <select id="role" required>
-                        <option value="" disabled selected>Alege rol</option>
-                        <option value="admin">Admin</option>
-                        <option value="parent">Părinte</option>
-                    </select>
+                    <input type="hidden" id="role" value="parent" />
+
 
                     <button type="submit">Înregistrează</button>
                     <p id="registerMsg" class="error-msg"></p>

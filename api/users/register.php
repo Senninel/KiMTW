@@ -7,9 +7,9 @@ header('Content-Type: application/json');
 $data = json_decode(file_get_contents("php://input"), true);
 $username = trim($data['username'] ?? '');
 $password = trim($data['password'] ?? '');
-$role = trim($data['role'] ?? '');
+$role = 'parent'; 
 
-if (!$username || !$password || !in_array($role, ['admin', 'parent'])) {
+if (!$username || !$password) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Date invalide']);
     exit;

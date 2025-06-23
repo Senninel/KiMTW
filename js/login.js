@@ -52,7 +52,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
     const username = document.getElementById("newUsername").value.trim();
     const password = document.getElementById("newPassword").value.trim();
-    const role = document.getElementById("role").value;
+    const role = "parent";
     const msg = document.getElementById("registerMsg");
 
     try {
