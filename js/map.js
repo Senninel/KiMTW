@@ -67,7 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    
+
+
     // Initializarea Hartii
     function initializeMap() {
         map = L.map('map').setView([45.9432, 24.9668], 7); // Centrat pe Romania
@@ -107,11 +108,60 @@ document.addEventListener('DOMContentLoaded', () => {
                         checkDistances(child);
                     }
                 });
+		checkChildInteractions(result.data);
             }
         } catch (error) {
             console.error("A aparut o eroare la actualizarea locatiei copiilor:", error);
         }
     }
+
+function checkChildInteractions(children) {
+    for (let i = 0; i < children.length; i++) {
+        for (let j = i + 1; j < children.length; j++) {
+            const child1 = children[i];
+            const child2 = children[j];
+
+            if (!child1.latitude || !child1.longitude || !child2.latitude || !child2.longitude) continue;
+
+            const distance = getDistance(
+                parseFloat(child1.latitude),
+                parseFloat(child1.longitude),
+                parseFloat(child2.latitude),
+                parseFloat(child2.longitude)
+            );
+
+            if (distance < 100) {
+                showInteractionNotification(child1, child2, distance);
+
+                // Trimite la server pentru salvare în DB
+                fetch("/Kim/api/interactions/add.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        child_id_1: child1.child_id,
+                        child_id_2: child2.child_id,
+                        distance: distance.toFixed(2)
+                    })
+                });
+            }
+        }
+    }
+}
+
+function showInteractionNotification(child1, child2, distance) {
+    const alertId = `interaction-${child1.child_id}-${child2.child_id}`;
+    if (!document.getElementById(alertId)) {
+        const alertDiv = document.createElement("div");
+        alertDiv.id = alertId;
+        alertDiv.className = "interaction-alert";
+        alertDiv.textContent = `Interacțiune: ${child1.child_name} și ${child2.child_name} sunt la ${distance.toFixed(1)}m unul de altul.`;
+        document.getElementById("alertContainer").appendChild(alertDiv);
+
+        // Dispare după 30 secunde
+        setTimeout(() => alertDiv.remove(), 30000);
+    }
+}
 
     // Functie pentru a prelua si afisa locatia parintelui
     async function fetchAndDisplayParentLocation() {
@@ -258,3 +308,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
