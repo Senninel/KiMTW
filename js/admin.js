@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Inițializare ---
+    // --- Initializare ---
     checkSession();
     showContent(0);
 });

@@ -9,8 +9,10 @@
 <body>
     <div class="login-wrapper">
         <div class="login-container">
-            <!-- Login -->
             <div id="login-tab" class="tab active">
+                <div class="logo-container">
+                    <img src="/Kim/img/logo.svg" alt="KiM Logo" class="logo">
+                </div>
                 <h1>KiM Login</h1>
                 <form id="loginForm">
                     <label for="username">Utilizator</label>
@@ -25,8 +27,10 @@
                 <button class="switch-btn" onclick="showRegister()">Creează cont</button>
             </div>
 
-            <!-- Register -->
             <div id="register-tab" class="tab">
+                 <div class="logo-container">
+                    <img src="/Kim/img/logo.svg" alt="KiM Logo" class="logo">
+                </div>
                 <h1>Înregistrare</h1>
                 <form id="registerForm">
                     <label for="newUsername">Utilizator nou</label>
@@ -37,7 +41,7 @@
 
                     <label for="role">Rol</label>
                     <select id="role" required>
-                        <option disabled selected>Alege rol</option>
+                        <option value="" disabled selected>Alege rol</option>
                         <option value="admin">Admin</option>
                         <option value="parent">Părinte</option>
                     </select>
