@@ -24,14 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const updateBtn = document.getElementById("updateBtn");
     const deleteBtn = document.getElementById("deleteBtn");
     const exportBtn = document.getElementById("exportBtn");
+    const importBtn = document.getElementById("importBtn"); // Buton nou
 
     const addContent = document.getElementById("addContent");
     const updateContent = document.getElementById("updateContent");
     const deleteContent = document.getElementById("deleteContent");
     const exportContent = document.getElementById("exportContent");
+    const importContent = document.getElementById("importContent"); // Conținut nou
     
-    const buttons = [addBtn, updateBtn, deleteBtn, exportBtn];
-    const contents = [addContent, updateContent, deleteContent, exportContent];
+    const buttons = [addBtn, updateBtn, deleteBtn, exportBtn, importBtn];
+    const contents = [addContent, updateContent, deleteContent, exportContent, importContent];
 
     function showContent(index) {
         buttons.forEach((btn, i) => {
@@ -44,8 +46,75 @@ document.addEventListener("DOMContentLoaded", () => {
     updateBtn.addEventListener("click", (e) => { e.preventDefault(); showContent(1); });
     deleteBtn.addEventListener("click", (e) => { e.preventDefault(); showContent(2); });
     exportBtn.addEventListener("click", (e) => { e.preventDefault(); showContent(3); });
+    importBtn.addEventListener("click", (e) => { e.preventDefault(); showContent(4); }); // Eveniment nou
 
-    // Logica pentru export
+    // --- Logica pentru Import ---
+    const importForm = document.getElementById("importForm");
+    importForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById("importFile");
+        const msgBox = document.getElementById("importMsg");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            msgBox.textContent = "Te rog, alege un fișier.";
+            msgBox.style.color = "#ff5c5c";
+            return;
+        }
+
+        msgBox.textContent = "Se importă datele...";
+        msgBox.style.color = "#8EB69B";
+
+        try {
+            const fileContent = await file.text();
+            let data;
+            if (file.name.endsWith(".json")) {
+                data = JSON.parse(fileContent);
+            } else if (file.name.endsWith(".csv")) {
+                data = csvToJson(fileContent);
+            } else {
+                throw new Error("Format de fișier neacceptat. Folosește CSV sau JSON.");
+            }
+
+            const res = await fetch("/Kim/api/import/children_data.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            msgBox.textContent = result.message || "Eroare la import.";
+            msgBox.style.color = result.success ? "#8EB69B" : "#ff5c5c";
+            if (result.success) {
+                importForm.reset();
+                loadChildren(); // Reîncarcă lista de copii
+            }
+
+        } catch (error) {
+            msgBox.textContent = `Eroare: ${error.message}`;
+            msgBox.style.color = "#ff5c5c";
+        }
+    });
+
+    function csvToJson(csv) {
+        const lines = csv.split("\n").filter(line => line.trim() !== "");
+        if (lines.length < 2) return [];
+        const headers = lines[0].split(",").map(h => h.trim());
+        const result = [];
+        for (let i = 1; i < lines.length; i++) {
+            const obj = {};
+            const currentline = lines[i].split(",");
+            for (let j = 0; j < headers.length; j++) {
+                // Asigură că alocarea se face corect, chiar dacă linia are mai puține coloane
+                obj[headers[j]] = currentline[j] ? currentline[j].trim() : "";
+            }
+            result.push(obj);
+        }
+        return result;
+    }
+
+    // --- Logica pentru Export ---
     const exportForm = document.getElementById("exportForm");
     exportForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -56,9 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const res = await fetch("/Kim/api/export/children_data.php", { credentials: "include" });
-            if (!res.ok) {
-                throw new Error(`Eroare server: ${res.statusText}`);
-            }
+            if (!res.ok) throw new Error(`Eroare server: ${res.statusText}`);
             const data = await res.json();
 
             if (format === "json") {
@@ -81,9 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const row of data) {
             const values = headers.map(header => {
                 let value = row[header] === null || row[header] === undefined ? "" : String(row[header]);
-                if (value.includes(",")) {
-                    value = `"${value}"`;
-                }
+                if (value.includes(",")) value = `"${value}"`;
                 return value;
             });
             csvRows.push(values.join(","));
@@ -102,7 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
         URL.revokeObjectURL(a.href);
     }
 
-    // Adaugare copil
+    // --- Adaugare, Actualizare, Stergere Copil (CRUD) ---
+    // Adaugare
     const addChildForm = document.getElementById("addChildForm");
     addChildForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -126,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
-    // Actualizare copil
+    // Actualizare
     const updateChildForm = document.getElementById("updateChildForm");
     updateChildForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -140,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (parent_id) body.parent_id = parseInt(parent_id);
         
         if (Object.keys(body).length <= 1) {
-            msgBox.textContent = "Trebuie să completezi cel puțin un câmp pentru actualizare (nume sau ID părinte).";
+            msgBox.textContent = "Completează cel puțin un câmp nou (nume sau ID părinte).";
             msgBox.style.color = "#ff5c5c";
             return;
         }
@@ -161,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Stergere copil
+    // Stergere
     const deleteChildForm = document.getElementById("deleteChildForm");
     deleteChildForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -169,9 +235,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const msgBox = document.getElementById("deleteMsg");
 
         if (!id || id <= 0) {
-             msgBox.textContent = "ID copil invalid.";
-             msgBox.style.color = "#ff5c5c";
-             return;
+           msgBox.textContent = "ID copil invalid.";
+           msgBox.style.color = "#ff5c5c";
+           return;
         }
 
         const res = await fetch("/Kim/api/children/index.php", {
@@ -190,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Incarcare lista copii
+    // --- Incarcare lista copii ---
     async function loadChildren() {
         const res = await fetch("/Kim/api/children/index.php", { credentials: "include" });
         const data = await res.json();
@@ -206,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // --- Inițializare ---
     checkSession();
     showContent(0);
 });

@@ -261,3 +261,11 @@ button {
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+.interaction-alert {
+    background-color: #007BFF; /* Albastru */
+    color: white;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    font-weight: bold;
+}

@@ -1,71 +1,111 @@
+let movementIntervals = [];
+let accidentIntervals = [];
 
-const runningSimulations = {};
+const accidentTypes = [
+    "fall_detected",
+    "possible_collision",
+    "unusual_stop",
+    "rapid_acceleration"
+];
 
-// Functia care porneste simularea pentru un set de copii
 async function startSimulation() {
-    stopSimulation(); // Oprim orice simulare anterioara pentru a evita duplicatele
+    stopSimulation(false);
+    console.log("Se initiaza simularea de miscare si accidente...");
 
     try {
-        // Apelam scriptul care ne returneaza copiii si ultima lor locatie
         const response = await fetch('/Kim/api/children/get_by_parent.php', { credentials: 'include' });
         const result = await response.json();
 
-        if (result.success && result.data.length > 0) {
-            console.log("Pornire simulare pentru copiii:", result.data);
+        if (!result.success || !result.data) {
+            alert("Eroare la preluarea datelor pentru simulare: " + (result.message || "Raspuns invalid de la server."));
+            return;
+        }
 
-            result.data.forEach(child => {
-                let currentLocation = {
-                    latitude: parseFloat(child.latitude),
-                    longitude: parseFloat(child.longitude)
-                };
+        if (result.data.length === 0) {
+            alert("Nu aveti niciun copil inregistrat pentru a porni simularea.");
+            return;
+        }
 
-                // Salvam ID-ul intervalului pentru a-l putea opri mai tarziu
-                runningSimulations[child.child_id] = setInterval(() => {
-                    // "Misca" locatia cu o valoare mica, aleatorie
-                    currentLocation.latitude += (Math.random() - 0.5) * 0.0005;
-                    currentLocation.longitude += (Math.random() - 0.5) * 0.0005;
+        const children = result.data;
+        console.log(`Pornire simulare pentru ${children.length} copii...`);
 
-                    const data = {
-                        child_id: child.child_id,
-                        latitude: currentLocation.latitude.toFixed(6),
-                        longitude: currentLocation.longitude.toFixed(6)
-                    };
+        children.forEach(child => {
+            let lat, lon;
 
-                    // Trimitem noua locatie catre server prin API-ul de adaugare
-                    fetch('/Kim/api/locations/add.php', {
-                        method: 'POST',
+            if (child.latitude && child.longitude && !isNaN(parseFloat(child.latitude))) {
+                lat = parseFloat(child.latitude);
+                lon = parseFloat(child.longitude);
+                console.log(`Copilul #${child.child_id} porneste de la locatia salvata: ${lat}, ${lon}`);
+            } else {
+                lat = 47.1585 + (Math.random() - 0.5) * 0.02;
+                lon = 27.6014 + (Math.random() - 0.5) * 0.02;
+                console.warn(`Copilul #${child.child_id} nu are o locatie validă. Se foloseste locatia implicita: ${lat}, ${lon}`);
+            }
+
+            // Interval pentru simularea miscarii
+            const moveInterval = setInterval(() => {
+                lat += (Math.random() - 0.5) * 0.001;
+                lon += (Math.random() - 0.5) * 0.001;
+
+                fetch("/Kim/api/locations/add.php", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ child_id: child.child_id, latitude: lat.toFixed(6), longitude: lon.toFixed(6) })
+                }).catch(err => console.error(`[Miscare] Eroare la trimiterea locatiei pentru copilul #${child.child_id}:`, err));
+
+            }, 10000); // la 10 secunde
+
+            // Interval pentru simularea accidentelor
+            const accidentInterval = setInterval(() => {
+                if (Math.random() < 0.2) {
+                    const accidentType = accidentTypes[Math.floor(Math.random() * accidentTypes.length)];
+                    
+
+                    fetch("/Kim/api/alerts/create.php", {
+                        method: "POST",
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify({
+                            child_id: child.child_id,
+                            type: accidentType,
+                            description: `Accident simulat de tip ${accidentType} la locatia (${lat.toFixed(6)}, ${lon.toFixed(6)})`
+                        })
                     })
                     .then(res => res.json())
-                    .then(resData => console.log(`[Simulare Copil #${child.child_id}] Locatie trimisa. Raspuns:`, resData.message))
-                    .catch(err => console.error("Eroare la trimiterea locatiei:", err));
+                    .then(data => {
+                        if (data.success) {
+                            console.log(`%c[Accident] Alerta de tip '${accidentType}' trimisa cu succes pentru copilul #${child.child_id}`, "color: green;");
+                        } else {
+                            console.warn(`[Accident] Esec la generarea alertei pentru copilul #${child.child_id}:`, data.message || 'Serverul nu a returnat un mesaj de eroare specific.');
+                        }
+                    })
+                    .catch(err => console.error(`[Accident] Eroare importanta la crearea alertei pentru copilul #${child.child_id}:`, err));
+                }
+            }, 5000);
 
-                }, 10000); // Trimitem un update la fiecare 10 secunde
-            });
+            movementIntervals.push(moveInterval);
+            accidentIntervals.push(accidentInterval);
+        });
 
-            alert("Simularea a inceput pentru toti copiii!");
+        alert(`Simularea a inceput pentru ${children.length} copil/copii.`);
 
-        } else if (result.data.length === 0) {
-            alert("Nu aveti niciun copil inregistrat pentru a porni simularea.");
-        } else {
-            alert("Eroare la pornirea simularii: " + result.message);
-        }
     } catch (error) {
-        console.error("Eroare majora la pornirea simularii:", error);
-        alert("A aparut o eroare tehnica. Va rugam sa incercati din nou.");
+        console.error("Eroare majora in funcția startSimulation:", error);
+        alert("A aparut o eroare tehnica la pornirea simularii. Verificati consola.");
     }
 }
 
-function stopSimulation() {
-    let count = 0;
-    for (const childId in runningSimulations) {
-        clearInterval(runningSimulations[childId]);
-        delete runningSimulations[childId];
-        count++;
-    }
-    if (count > 0) {
-        console.log(`Au fost oprite ${count} simulari.`);
+function stopSimulation(showAlert = true) {
+    const movementCount = movementIntervals.length;
+    const accidentCount = accidentIntervals.length;
+
+    movementIntervals.forEach(clearInterval);
+    accidentIntervals.forEach(clearInterval);
+
+    movementIntervals = [];
+    accidentIntervals = [];
+
+    if (movementCount > 0 && showAlert) {
+        console.log(`Au fost oprite ${movementCount} simulari de miscare si ${accidentCount} simulari de accidente.`);
         alert("Simularea a fost oprita.");
     }
 }

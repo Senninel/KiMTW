@@ -13,59 +13,68 @@
             <a href="#" id="addBtn" class="active">Adaugă</a>
             <a href="#" id="updateBtn">Update</a>
             <a href="#" id="deleteBtn">Șterge</a>
-            <a href="#" id="exportBtn">Export</a> 
+            <a href="#" id="exportBtn">Export</a>
+            <a href="#" id="importBtn">Import</a>
             <a href="#" id="logoutBtnNav">Logout</a>
         </nav>
 
         <div id="addContent">
-            <div class="children-section">
-                <h2>Adaugă copil nou</h2>
-                <form id="addChildForm">
-                    <input type="text" id="childName" placeholder="Nume copil" required>
-                    <input type="number" id="parentId" placeholder="ID părinte" required>
-                    <button type="submit">Adaugă copil</button>
-                    <p id="childMsg" class="message-box"></p>
-                </form>
-            </div>
+            <h2>Adaugă un copil nou</h2>
+            <form id="addChildForm">
+                <label for="childName">Nume copil:</label>
+                <input type="text" id="childName" required>
+                <label for="parentId">ID Părinte:</label>
+                <input type="number" id="parentId" required>
+                <button type="submit">Adaugă Copil</button>
+                <p id="childMsg" class="message-box"></p>
+            </form>
         </div>
 
         <div id="updateContent" style="display: none;">
-            <div class="children-section">
-                <h2>Actualizează datele unui copil</h2>
-                <form id="updateChildForm">
-                    <input type="number" id="updateChildId" placeholder="ID copil de actualizat" required>
-                    <input type="text" id="updateChildName" placeholder="Nume nou (opțional)">
-                    <input type="number" id="updateParentId" placeholder="ID părinte nou (opțional)">
-                    <button type="submit">Actualizează</button>
-                    <p id="updateMsg" class="message-box"></p>
-                </form>
-            </div>
+            <h2>Actualizează datele unui copil</h2>
+            <form id="updateChildForm">
+                <label for="updateChildId">ID Copil de actualizat:</label>
+                <input type="number" id="updateChildId" required>
+                <label for="updateChildName">Nume nou (opțional):</label>
+                <input type="text" id="updateChildName">
+                <label for="updateParentId">ID Părinte nou (opțional):</label>
+                <input type="number" id="updateParentId">
+                <button type="submit">Actualizează Date</button>
+                <p id="updateMsg" class="message-box"></p>
+            </form>
         </div>
 
         <div id="deleteContent" style="display: none;">
-            <div class="children-section">
-                <h2>Șterge un copil</h2>
-                <form id="deleteChildForm">
-                    <input type="number" id="deleteChildId" placeholder="ID copil de șters" required>
-                    <button type="submit">Șterge</button>
-                    <p id="deleteMsg" class="message-box"></p>
-                </form>
-            </div>
+            <h2>Șterge un copil</h2>
+            <form id="deleteChildForm">
+                <label for="deleteChildId">ID Copil de șters:</label>
+                <input type="number" id="deleteChildId" required>
+                <button type="submit">Șterge Copil</button>
+                <p id="deleteMsg" class="message-box"></p>
+            </form>
+        </div>
+        
+        <div id="exportContent" style="display: none;">
+            <h2>Exportă date copii</h2>
+            <form id="exportForm">
+                <label for="exportFormat">Alege formatul:</label>
+                <select id="exportFormat">
+                    <option value="json">JSON</option>
+                    <option value="csv">CSV</option>
+                </select>
+                <button type="submit">Exportă Date</button>
+                <p id="exportMsg" class="message-box"></p>
+            </form>
         </div>
 
-        <div id="exportContent" style="display: none;">
-            <div class="children-section">
-                <h2>Exportă date copii</h2>
-                <form id="exportForm">
-                    <label for="exportFormat" style="margin-bottom: 0.5rem;">Alege formatul de export:</label>
-                    <select id="exportFormat">
-                        <option value="json">JSON</option>
-                        <option value="csv">CSV</option>
-                    </select>
-                    <button type="submit">Descarcă Date</button>
-                    <p id="exportMsg" class="message-box"></p>
-                </form>
-            </div>
+        <div id="importContent" style="display: none;">
+            <h2>Importă date copii</h2>
+            <form id="importForm">
+                <label for="importFile" style="margin-bottom: 0.5rem;">Alege fișierul (CSV sau JSON):</label>
+                <input type="file" id="importFile" accept=".csv, .json" required>
+                <button type="submit">Importă Date</button>
+                <p id="importMsg" class="message-box"></p>
+            </form>
         </div>
 
         <div class="children-section">
