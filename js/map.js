@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const MAX_DISTANCE_METERS = 100; // Distanta maxima admisa in metri
-    const UPDATE_INTERVAL = 500;   // Actualizam locatia copiilor la fiecare 0.5 secunde
+    const UPDATE_INTERVAL = 10000;   // Actualizam locatia copiilor la fiecare 10 secunde
 
     const childMarkers = {}; // Obiect pentru a stoca markerele copiilor
     let map;
