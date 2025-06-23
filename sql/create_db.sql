@@ -34,6 +34,17 @@ CREATE TABLE alerts (
                         FOREIGN KEY (child_id) REFERENCES children(id) ON DELETE CASCADE
 );
 
+CREATE TABLE interactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    child_id_1 INT NOT NULL,
+    child_id_2 INT NOT NULL,
+    distance FLOAT NOT NULL,
+    interacted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (child_id_1) REFERENCES children(id) ON DELETE CASCADE,
+    FOREIGN KEY (child_id_2) REFERENCES children(id) ON DELETE CASCADE
+);
+
+
 
 CREATE TABLE interactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
